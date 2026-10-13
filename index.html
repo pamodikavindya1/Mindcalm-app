@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content=" MindCalm": A quiet corner of the internet for focus, breathing, and restoration. Pomodoro timer, guided breathing, ambient sounds, and wellness support.">
+  <meta name="theme-color" content="#064E3B">
+  <title>MindCalm | Focus & Relaxation</title>
+  <!-- Google Fonts + modern font stack --
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* CSS Custom Properties (Light Mode Default) */
+    :root {
+      --bg-img: url('image_fe2925.jpg');
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.05);
+      --text-primary: #1A2E2A;
+      --text-secondary: #2D4A3F;
+      --accent: #10B981;
+      --accent-dark: #064E3B;
+      --border-light: #E2E8F0;
+      --btn-bg: #10B981;
+      --btn-hover: #059669;
+      --danger-bg: #EF4444;
+      --danger-hover: #DC2626;
+      --glass-border: 1px solid rgba(255,255,255,0.5);
+      --transition: all 0.2s ease;
+      --circle-bg: rgba(16, 185, 129, 0.15);
+    }
+
+    body.dark-mode {
+      --card-bg: rgba(22, 42, 38, 0.95);
+      --text-primary: #ECFDF5;
+      --text-secondary: #A7F3D0;
+      --border-light: #2D4A3F;
+      --btn-bg: #0F766E;
+      --btn-hover: #14B8A6;
+      --circle-bg: rgba(16, 185, 129, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-img) fixed center center / cover no-repeat;
+      color: var(--text-primary);
+      scroll-behavior: smooth;
+      line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* Custom Cursor Effect */
+    .custom-cursor {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #10B981;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: 0.08s linear;
+      backdrop-filter: invert(0.2);
+      mix-blend-mode: difference;
+    }
+
+    /* Glassmorphic container + max-width */
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 1.2rem 1.5rem 3rem;
+    }
+
+    /* Fixed Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      padding: 0.8rem 2rem;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--border-light);
+    }
+    body.dark-mode .navbar {
+      background: rgba(10, 20, 18, 0.9);
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--accent-dark);
+      letter-spacing: -0.3px;
+    }
+    body.dark-mode .logo { color: #10B981; }
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: 0.2s;
+    }
+    .nav-links a:hover { color: #9eb4ad; }
+    .hamburger {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+    }
+    .dark-toggle {
+      background: var(--accent);
+      border: none;
+      border-radius: 40px;
+      padding: 0.4rem 0.8rem;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      box-shadow: var(--card-shadow);
+      padding: 1.8rem 1.8rem;
+      margin-bottom: 2rem;
+      border: var(--glass-border);
+      transition: var(--transition);
+    }
+
+    /* Timer & UI Elements */
+    .timer-display {
+      font-size: 4.8rem;
+      font-weight: 700;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      letter-spacing: 6px;
+      color: var(--accent-dark);
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 3rem;
+      padding: 0.5rem;
+      margin: 1rem 0;
+    }
+    body.dark-mode .timer-display { color: #34D399; }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: none;
+      background: var(--btn-bg);
+      color: white;
+      font-weight: 600;
+      padding: 0.7rem 1.4rem;
+      border-radius: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent-dark);
+    }
+    body.dark-mode .btn-outline { color: #A7F3D0; border-color: #10B981; }
+    .btn-danger { background: var(--danger-bg); }
+    .btn-danger:hover { background: var(--danger-hover); }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.03); background: var(--btn-hover); }
+
+    /* Breathing Circle */
+    .circle-container {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .breathing-circle {
+      width: 150px;
+      height: 150px;
+      background: var(--circle-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-align: center;
+      color: var(--accent-dark);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 0 4px rgba(16,185,129,0.2);
+      transition: transform 0.1s;
+    }
+    @keyframes breatheOuter {
+      0% { transform: scale(1); background: rgba(16,185,129,0.2); }
+      50% { transform: scale(1.35); background: rgba(16,185,129,0.4); }
+      100% { transform: scale(1); background: rgba(16,185,129,0.2); }
+    }
+    .breathing-active {
+      animation: breatheOuter 4s ease-in-out infinite;
+    }
+    /* Ambient rows */
+    .sound-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border-light);
+      gap: 0.5rem;
+    }
+    .sound-info {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex: 2;
+      font-weight: 500;
+    }
+    .sound-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-sm {
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      border-radius: 2rem;
+    }
+    .volume-control {
+      margin: 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    input[type="range"] { flex: 1; height: 6px; border-radius: 10px; }
+    /* Support Grid */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .support-card {
+      background: rgba(16,185,129,0.08);
+      border-radius: 1.5rem;
+      padding: 1.2rem;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .support-card a {
+      color: var(--accent-dark);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    /* Footer */
+    .footer {
+      background: rgba(246, 248, 242, 0.5);
+      backdrop-filter: blur(8px);
+      border-radius: 2rem 2rem 0 0;
+      padding: 2rem 1.5rem;
+      margin-top: 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 2rem;
+    }
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    /* Contact Form */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 1.5rem;
+      border: 1px solid var(--border-light);
+      background: rgba(255,255,255,0.7);
+    }
+    body.dark-mode input, body.dark-mode textarea { background: #1F2E2A; color: white; }
+
+    /* Mobile */
+    @media (max-width: 680px) {
+      .container { padding: 1rem; }
+      .timer-display { font-size: 3.2rem; letter-spacing: 2px; }
+      .button-group .btn { flex: 1; justify-content: center; }
+      .sound-row { flex-direction: column; align-items: flex-start; }
+      .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 70%;
+        height: 100vh;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        transition: 0.3s;
+        gap: 2rem;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+      }
+      .nav-links.active { left: 0; }
+      .hamburger { display: block; }
+    }
+    @media (max-width: 550px) {
+      .glass-card { padding: 1.2rem; }
+      .btn { width: 100%; text-align: center; justify-content: center; }
+      .support-grid { grid-template-columns: 1fr; }
+    }
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #064E3B, #10B981);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .tagline {
+      font-size: 1.3rem;
+      margin-top: 1rem;
+      font-weight: 400;
+    }
+    img.thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+<div class="custom-cursor" id="customCursor"></div>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">🧘 MindCalm</div>
+    <div class="hamburger" id="hamburgerBtn">☀️</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero">Home</a>
+      <a href="#timer-section">Focus</a>
+      <a href="#breathing-section">Breathe</a>
+      <a href="#sounds-section">Ambient</a>
+      <a href="#support-section">Support</a>
+      <a href="#contact">Connect</a>
+      <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
+      <button class="dark-toggle" id="langToggleBtn">🇱🇰 සිංහල</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="container" style="max-width:700px">
+      <h1>MindCalm</h1>
+      <div class="tagline" id="heroTagline">A quiet corner of the internet – focus, breathe, restore</div>
+      <button class="btn" style="margin-top:1.8rem" onclick="document.getElementById('timer-section').scrollIntoView({behavior:'smooth'})">Start your journey →</button>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Pomodoro Timer Card -->
+    <div id="timer-section" class="glass-card">
+      <div class="flex-between"><h2>🍅 Focus Timer</h2><span class="help-text" id="timerHelpText">25 min work · 5 min break · repeat</span></div>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="button-group">
+        <button class="btn" id="timerStartBtn">▶ Start</button>
+        <button class="btn" id="timerPauseBtn">⏸ Pause</button>
+        <button class="btn btn-outline" id="timerResetBtn">⟳ Reset</button>
+      </div>
+    </div>
+
+    <!-- Guided Breathing -->
+    <div id="breathing-section" class="glass-card">
+      <div class="flex-between"><h2>🌬️ Guided breathing <img src="image_fe29b8.jpg" alt="breathing" class="thumb" onerror="this.style.display='none'"></h2></div>
+      <div class="circle-container">
+        <div class="breathing-circle" id="breathingCircle">Inhale</div>
+      </div>
+      <div class="button-group">
+        <button class="btn" id="breathStartBtn">🌿 Start breathing</button>
+        <button class="btn btn-outline" id="breathStopBtn">⏹️ Stop</button>
+      </div>
+    </div>
+
+    <!-- Ambient Sounds Mixer -->
+    <div id="sounds-section" class="glass-card">
+      <div class="flex-between"><h2>🎵 Ambient sounds <img src="image_fe30e4.jpg" alt="sounds" class="thumb" onerror="this.style.display='none'"></h2></div>
+      <div id="soundsList"></div>
+      <div class="volume-control">
+        <span>🔊 Master Volume</span>
+        <input type="range" id="masterVolume" min="0" max="100" value="65">
+        <span id="volumePercent">65%</span>
+        <button class="btn btn-sm" id="stopAllBtn">⏹️ Stop all</button>
+      </div>
+    </div>
+
+    <!-- Support & Help Grid -->
+    <div id="support-section" class="glass-card">
+      <h2>🫂 Support & help</h2>
+      <div class="support-grid" id="supportGrid"></div>
+    </div>
+
+    <!-- Contact Form & Footer inside card style -->
+    <div id="contact" class="glass-card">
+      <h2>✉️ Stay connected</h2>
+      <form id="contactForm">
+        <div class="form-group"><input type="text" id="contactName" placeholder="Full name" required></div>
+        <div class="form-group"><input type="email" id="contactEmail" placeholder="Email address" required></div>
+        <div class="form-group"><textarea rows="3" placeholder="How can we support you?"></textarea></div>
+        <button type="submit" class="btn">Send message</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container" style="max-width:680px">
+      <div class="footer-grid">
+        <div><h4>MindCalm</h4><p>A quiet sanctuary for mental clarity.</p></div>
+        <div><h4>Explore</h4><p><a href="#timer-section" style="color:inherit">Timer</a><br><a href="#breathing-section" style="color:inherit">Breathing</a><br><a href="#sounds-section" style="color:inherit">Sounds</a></p></div>
+        <div><h4>Contact</h4><p>hello@mindcalm.life</p><div class="social-icons"><a href="#" id="fbIcon">📘</a><a href="#" id="twIcon">🐦</a><a href="#" id="igIcon">📸</a></div></div>
+      </div>
+      <p style="text-align:center; margin-top:1.5rem">© 2026 MindCalm — restore your inner peace</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+  // ---------- GLOBAL STATE ----------
+  let currentLanguage = 'en'; // 'en' or 'si'
+  let timerInterval = null;
+  let timerSeconds = 25 * 60;
+  let isTimerRunning = false;
+  let currentTimerMode = 'work'; // work or break
+
+  // Breathing state
+  let breathInterval = null;
+  let breathActive = false;
+  let breathPhaseIndex = 0;
+  const breathPhasesEn = ['Inhale', 'Hold', 'Exhale', 'Rest'];
+  const breathPhasesSi = ['ආශ්වාස කරන්න', 'රඳවා තබා ගන්න', 'හුස්ම පිට කරන්න', 'විවේක ගන්න'];
+  let breathCurrentPhases = breathPhasesEn;
+
+  // Audio tracks
+  const tracks = [
+    { id: 'rain', nameEn: 'Soft rain', nameSi: 'මෘදු වැස්ස', file: 'rain.mp3' },
+    { id: 'ocean', nameEn: 'Ocean waves', nameSi: 'සාගර රළ', file: 'ocean.mp3' },
+    { id: 'birds', nameEn: 'Forest birds', nameSi: 'වනාන්තර කුරුල්ලන්', file: 'birds.mp3' },
+    { id: 'cafe', nameEn: 'Café ambience', nameSi: 'කැෆේ වාතාවරණය', file: 'cafe.mp3' },
+    { id: 'crickets', nameEn: 'Night crickets', nameSi: 'රාත්‍රී මිදි කෑගැසීම', file: 'crickets.mp3' },
+    { id: 'whitenoise', nameEn: 'White noise', nameSi: 'සුදු ශබ්දය', file: 'white_noise.mp3' }
+  ];
+  let audioPlayers = {};
+
+  // ---- Helper: update UI translations ----
+  const translations = {
+    en: { tagline: "A quiet corner of the internet – focus, breathe, restore", timerHelp: "25 min work · 5 min break · repeat", stopAllBtn: "Stop all", masterVolLabel: "Master Volume" },
+    si: { tagline: "මෙහි මානසික සුවය සහ සහනය – අවධානය යොමු කරන්න, හුස්ම ගන්න, ප්‍රබෝධමත් වන්න", timerHelp: "වැඩ විනාඩි 25 · විවේකය විනාඩි 5 · නැවත කරන්න", stopAllBtn: "සියල්ල නවතන්න", masterVolLabel: "ප්‍රධාන ශබ්දය" }
+  };
+
+  function applyLanguage() {
+    const isSi = currentLanguage === 'si';
+    document.getElementById('heroTagline').innerText = translations[currentLanguage].tagline;
+    document.getElementById('timerHelpText').innerText = translations[currentLanguage].timerHelp;
+    document.getElementById('stopAllBtn').innerText = translations[currentLanguage].stopAllBtn;
+    document.querySelector('.volume-control span:first-child').innerHTML = isSi ? '🔊 ප්‍රධාන ශබ්දය' : '🔊 Master Volume';
+    // update buttons text start/pause/reset originally with icons? we refresh static text inside but icons intact.
+    const startBtn = document.getElementById('timerStartBtn');
+    const pauseBtn = document.getElementById('timerPauseBtn');
+    const resetBtn = document.getElementById('timerResetBtn');
+    startBtn.innerHTML = isSi ? '▶ ආරම්භ කරන්න' : '▶ Start';
+    pauseBtn.innerHTML = isSi ? '⏸ විරාමය' : '⏸ Pause';
+    resetBtn.innerHTML = isSi ? '⟳ නැවත සකසන්න' : '⟳ Reset';
+    document.getElementById('breathStartBtn').innerHTML = isSi ? '🌿 ආරම්භ කරන්න' : '🌿 Start breathing';
+    document.getElementById('breathStopBtn').innerHTML = isSi ? '⏹️ නවතන්න' : '⏹️ Stop';
+    // update sounds list names (dynamic)
+    updateSoundRowsText();
+    // update support cards
+    updateSupportCardsText();
+    // update breathing label if not active to current language
+    if (!breathActive) {
+      const circleDiv = document.getElementById('breathingCircle');
+      circleDiv.innerText = breathCurrentPhases[0];
+    } else {
+      // update current displayed phase to new language
+      const phases = currentLanguage === 'si' ? breathPhasesSi : breathPhasesEn;
+      const circleDiv = document.getElementById('breathingCircle');
+      const currentText = circleDiv.innerText;
+      const idx = breathCurrentPhases.indexOf(currentText);
+      if (idx !== -1) circleDiv.innerText = phases[idx];
+      breathCurrentPhases = phases;
+    }
+    // for non-active breathing just sync phase array
+    if (!breathActive) breathCurrentPhases = currentLanguage === 'si' ? breathPhasesSi : breathPhasesEn;
+    else breathCurrentPhases = currentLanguage === 'si' ? breathPhasesSi : breathPhasesEn;
+    lucide.createIcons();
+  }
+
+  function updateSoundRowsText() {
+    const rows = document.querySelectorAll('.sound-row');
+    rows.forEach((row, idx) => {
+      const nameSpan = row.querySelector('.sound-name');
+      if (nameSpan && tracks[idx]) {
+        nameSpan.innerText = currentLanguage === 'si' ? tracks[idx].nameSi : tracks[idx].nameEn;
+      }
+      const playBtn = row.querySelector('.play-sound');
+      const stopBtn = row.querySelector('.stop-sound');
+      if (playBtn) playBtn.innerHTML = currentLanguage === 'si' ? '🔊 වාදනය' : '🔊 Play';
+      if (stopBtn) stopBtn.innerHTML = currentLanguage === 'si' ? '⏹️ නවතන්න' : '⏹️ Stop';
+    });
+  }
+
+  function updateSupportCardsText() {
+    const grid = document.getElementById('supportGrid');
+    const cards = grid.querySelectorAll('.support-card');
+    if (cards.length) {
+      const titles = currentLanguage === 'si' ? ['CCLine ශ්‍රී ලංකාව', 'NIMH ශ්‍රී ලංකාව', 'විශ්වවිද්‍යාල උපදේශන'] : ['CCLine (Sri Lanka)', 'NIMH Sri Lanka', 'University Counseling'];
+      const desc = currentLanguage === 'si' ? ['24/7 මානසික සහාය', 'ජාතික මානසික සෞඛ්‍ය ආයතනය', 'ශ්‍රී ලංකා විශ්වවිද්‍යාල සිසුන් සඳහා'] : ['24/7 Mental health support', 'National Institute of Mental Health', 'Campus well-being support'];
+      cards.forEach((card, i) => {
+        card.querySelector('h4').innerText = titles[i];
+        card.querySelector('p').innerText = desc[i];
+      });
+    }
+  }
+
+  // Render sounds list dynamically
+  function buildSoundsList() {
+    const container = document.getElementById('soundsList');
+    container.innerHTML = '';
+    tracks.forEach((track, i) => {
+      const row = document.createElement('div');
+      row.className = 'sound-row';
+      row.innerHTML = `
+        <div class="sound-info"><i data-lucide="music"></i><span class="sound-name">${currentLanguage === 'si' ? track.nameSi : track.nameEn}</span></div>
+        <div class="sound-actions">
+          <button class="btn-sm btn play-sound" data-id="${track.id}">🔊 Play</button>
+          <button class="btn-sm btn-outline stop-sound" data-id="${track.id}">⏹️ Stop</button>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+    lucide.createIcons();
+    attachAudioEvents();
+  }
+
+  function attachAudioEvents() {
+    document.querySelectorAll('.play-sound').forEach(btn => {
+      btn.removeEventListener('click', playHandler);
+      btn.addEventListener('click', playHandler);
+    });
+    document.querySelectorAll('.stop-sound').forEach(btn => {
+      btn.removeEventListener('click', stopHandler);
+      btn.addEventListener('click', stopHandler);
+    });
+  }
+  function playHandler(e) { const id = e.currentTarget.dataset.id; playAudio(id); }
+  function stopHandler(e) { const id = e.currentTarget.dataset.id; stopAudio(id); }
+
+  function initAudioPlayers() {
+    tracks.forEach(t => {
+      const audio = new Audio(t.file);
+      audio.loop = true;
+      audio.volume = document.getElementById('masterVolume').value / 100;
+      audioPlayers[t.id] = audio;
+    });
+  }
+
+  function playAudio(id) {
+    const audio = audioPlayers[id];
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(e => console.warn("audio play blocked", e));
+    }
+  }
+  function stopAudio(id) {
+    const audio = audioPlayers[id];
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+  }
+  function updateMasterVolume() { const vol = document.getElementById('masterVolume').value / 100; document.getElementById('volumePercent').innerText = Math.round(vol*100)+'%'; Object.values(audioPlayers).forEach(a => a.volume = vol); }
+  function stopAllSounds() { Object.values(audioPlayers).forEach(a => { a.pause(); a.currentTime = 0; }); }
+
+  // Pomodoro logic
+  function updateTimerDisplay() {
+    const mins = Math.floor(timerSeconds / 60);
+    const secs = timerSeconds % 60;
+    document.getElementById('timerDisplay').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+  }
+  function startTimer() { if (timerInterval) clearInterval(timerInterval); isTimerRunning = true; timerInterval = setInterval(timerTick, 1000); }
+  function pauseTimer() { clearInterval(timerInterval); isTimerRunning = false; }
+  function resetTimer() { pauseTimer(); timerSeconds = 25*60; currentTimerMode = 'work'; updateTimerDisplay(); isTimerRunning = false; }
+  function timerTick() {
+    if (timerSeconds <= 0) {
+      if (currentTimerMode === 'work') {
+        alert("✨ Time's up! Take a 5-min break ✨");
+        timerSeconds = 5 * 60;
+        currentTimerMode = 'break';
+        updateTimerDisplay();
+      } else {
+        alert("🌿 Break over! Back to focus. 🌿");
+        timerSeconds = 25 * 60;
+        currentTimerMode = 'work';
+        updateTimerDisplay();
+        pauseTimer();
+        isTimerRunning = false;
+        return;
+      }
+    } else {
+      timerSeconds--;
+      updateTimerDisplay();
+    }
+  }
+
+  // Breathing coach
+  function startBreathing() {
+    if (breathInterval) clearInterval(breathInterval);
+    breathActive = true;
+    const circle = document.getElementById('breathingCircle');
+    circle.classList.add('breathing-active');
+    breathPhaseIndex = 0;
+    const phases = breathCurrentPhases;
+    circle.innerText = phases[0];
+    breathInterval = setInterval(() => {
+      if (!breathActive) return;
+      breathPhaseIndex = (breathPhaseIndex + 1) % phases.length;
+      circle.innerText = phases[breathPhaseIndex];
+    }, 2000);
+  }
+  function stopBreathing() {
+    if (breathInterval) clearInterval(breathInterval);
+    breathActive = false;
+    const circle = document.getElementById('breathingCircle');
+    circle.classList.remove('breathing-active');
+    circle.innerText = breathCurrentPhases[0];
+    breathPhaseIndex = 0;
+  }
+
+  // Build Support Grid
+  function buildSupportGrid() {
+    const grid = document.getElementById('supportGrid');
+    const items = [
+      { link: 'tel:1333', nameEn: 'CCLine (Sri Lanka)', nameSi: 'CCLine ශ්‍රී ලංකාව', descEn: '24/7 Mental health support', descSi: '24/7 මානසික සහාය' },
+      { link: 'https://nimh.gov.lk', nameEn: 'NIMH Sri Lanka', nameSi: 'NIMH ශ්‍රී ලංකාව', descEn: 'National Institute of Mental Health', descSi: 'ජාතික මානසික සෞඛ්‍ය ආයතනය' },
+      { link: 'https://www.sab.ac.lk', nameEn: 'University Counseling', nameSi: 'විශ්වවිද්‍යාල උපදේශන', descEn: 'Campus well-being support', descSi: 'ශ්‍රී ලංකා විශ්වවිද්‍යාල සිසුන් සඳහා' }
+    ];
+    grid.innerHTML = '';
+    items.forEach(it => {
+      const card = document.createElement('div'); card.className = 'support-card';
+      card.innerHTML = `<h4>${currentLanguage === 'si' ? it.nameSi : it.nameEn}</h4><p>${currentLanguage === 'si' ? it.descSi : it.descEn}</p><a href="${it.link}" target="_blank">${currentLanguage === 'si' ? 'පිවිසෙන්න →' : 'Visit →'}</a>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // Language switch
+  function toggleLanguage() { currentLanguage = currentLanguage === 'en' ? 'si' : 'en'; applyLanguage(); buildSupportGrid(); updateSoundRowsText(); document.getElementById('langToggleBtn').innerHTML = currentLanguage === 'en' ? '🇱🇰 සිංහල' : '🇬🇧 English'; lucide.createIcons(); }
+
+  // Dark mode
+  function initDarkMode() { const isDark = localStorage.getItem('darkMode') === 'true'; if(isDark) document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').addEventListener('click', () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); }); }
+
+  // contact form validation
+  document.addEventListener('DOMContentLoaded', () => {
+    initAudioPlayers();
+    buildSoundsList();
+    buildSupportGrid();
+    initDarkMode();
+    updateTimerDisplay();
+    document.getElementById('timerStartBtn').onclick = startTimer;
+    document.getElementById('timerPauseBtn').onclick = pauseTimer;
+    document.getElementById('timerResetBtn').onclick = resetTimer;
+    document.getElementById('breathStartBtn').onclick = startBreathing;
+    document.getElementById('breathStopBtn').onclick = stopBreathing;
+    document.getElementById('masterVolume').addEventListener('input', (e) => { updateMasterVolume(); });
+    document.getElementById('stopAllBtn').onclick = stopAllSounds;
+    document.getElementById('langToggleBtn').onclick = toggleLanguage;
+    document.getElementById('contactForm').addEventListener('submit', (e) => { e.preventDefault(); alert(currentLanguage === 'si' ? 'පණිවිඩය ලැබුණා! ස්තුතියි.' : 'Message received! We’ll get back soon.'); e.target.reset(); });
+    updateMasterVolume();
+    // custom cursor
+    const cursor = document.getElementById('customCursor');
+    document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+    // hamburger
+    const hamburger = document.getElementById('hamburgerBtn'); const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); });
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>
